@@ -1,59 +1,79 @@
-#!/bin/bash
+#!/bin/zsh
 
 ###
-### variables
+### sourcing config file
 ###
 
-SCRIPT_DIR=$(echo "$(cd "${BASH_SOURCE[0]%/*}" && pwd)")
+if [[ -f ~/.shellscriptsrc ]]; then . ~/.shellscriptsrc; else echo '' && echo -e '\033[1;31mshell script config file not found...\033[0m\nplease install by running this command in the terminal...\n\n\033[1;34msh -c "$(curl -fsSL https://raw.githubusercontent.com/tiiiecherle/osx_install_config/master/_config_file/install_config_file.sh)"\033[0m\n' && exit 1; fi
+eval "$(typeset -f env_get_shell_specific_variables)" && env_get_shell_specific_variables
+
+
+
+###
+### run from batch script
+###
+
+
+### in addition to showing them in terminal write errors to logfile when run from batch script
+env_check_if_run_from_batch_script
+if [[ "$RUN_FROM_BATCH_SCRIPT" == "yes" ]]; then env_start_error_log; else :; fi
+
 
 
 ###
 ### script frame
 ###
 
-# if script is run standalone, not sourced from another script, load script frame
-if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
+if [[ -e "$SCRIPT_DIR"/1_script_frame.sh ]]
 then
-    # script is sourced
-    :
+    . "$SCRIPT_DIR"/1_script_frame.sh
+    eval "$(typeset -f env_get_shell_specific_variables)" && env_get_shell_specific_variables
 else
-    # script is not sourced, run standalone
-    if [[ -e "$SCRIPT_DIR"/1_script_frame.sh ]]
-    then
-        . "$SCRIPT_DIR"/1_script_frame.sh
-    else
-        echo ''
-        echo "script for functions and prerequisits is missing, exiting..."
-        echo ''
-        exit
-    fi
+    echo ''
+    echo "script for functions and prerequisits is missing, exiting..."
+    echo ''
+    exit
 fi
 
 
+
 ###
-### command line tools
+### homebrew cask
 ###
 
-checking_command_line_tools
+
+### command line tools
+env_command_line_tools_install_shell
 
 
 ### starting sudo
-start_sudo
+env_start_sudo
 
-# installing homebrew without pressing enter or entering the password again
-#echo ''
-if [[ $(which brew) == "" ]]
+
+### installing homebrew without pressing enter or entering the password again
+echo ''
+if command -v brew &> /dev/null
 then
+    # installed
+    echo "homebrew already installed, skipping..."   
+else
+    # not installed
     echo "installing homebrew..."
     # homebrew installation
-    #start_sudo
-    yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    #stop_sudo
-else
-    echo "homebrew already installed, skipping..."
+    #env_start_sudo
+    # ruby homebrew installer is deprecated
+    #yes | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    # rewritten in bash
+    yes | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    #env_stop_sudo
 fi
 
-# homebrew permissions
+
+### homebrew permissions
+# homebrew cache
+#sudo chown -R "$USER":staff $(brew --cache)
+sudo chown -R "$USER" $(brew --cache)
+
 #if [ -e "$(brew --prefix)" ] 
 #then
 #	echo "setting ownerships and permissions for homebrew..."
@@ -66,54 +86,45 @@ fi
 #	:
 #fi
 
+#echo ''
+
+
+### including homebrew commands in PATH
+# path documentation
+# see 2d_login_shell_customization.sh
+
+# setting path
 echo ''
+echo "setting PATH..."
 
-# including homebrew commands in PATH
-add_path_to_shell() {
-    echo "# setting PATH" >> "$SHELL_CONFIG"
-    echo 'export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' >> "$SHELL_CONFIG"
-}
+# default value of variable is set in .shellscriptsrc, can be overwritten here, e.g.
+# PATH_TO_SET='/usr/local/bin:$PATH'
 
-set_path_for_shell() {
-	if [[ $(command -v "$SHELL_TO_CHECK") == "" ]]
-	then
-	    #echo ''
-	    echo "$SHELL_TO_CHECK is not installed, skipping to set path..."
-	else
-	    echo "setting path for $SHELL_TO_CHECK..."
-        if [[ ! -e "$SHELL_CONFIG" ]]
-        then
-            touch "$SHELL_CONFIG"
-            chown 501:staff "$SHELL_CONFIG"
-            chmod 600 "$SHELL_CONFIG"
-            add_path_to_shell
-        elif [[ $(cat "$SHELL_CONFIG" | grep "^export PATH=") != "" ]]
-        then
-            sed -i '' 's|^export PATH=.*|export PATH="/usr/local/bin:/usr/local/sbin:$PATH"|' "$SHELL_CONFIG"
-        else
-            echo '' >> "$SHELL_CONFIG"
-            add_path_to_shell
-        fi
-        # sourcing changes for currently used shell
-        if [[ $(echo "$SHELL") == "$SHELL_TO_CHECK" ]]
-        then
-	        "$SHELL" -c "source "$SHELL_CONFIG""
-        else
-            :
-        fi
-	fi
-}
+# setting default paths in /etc/paths
+#env_start_sudo			# already started above
+#env_set_default_paths
+#env_stop_sudo			# done in trap
 
+# setting paths for bash
 SHELL_TO_CHECK="/bin/bash"
 SHELL_CONFIG="/Users/$(logname)/.bashrc"
-set_path_for_shell
+env_set_path_for_shell
 
+# setting paths for zsh
 SHELL_TO_CHECK="/bin/zsh"
 SHELL_CONFIG="/Users/$(logname)/.zshrc"
-set_path_for_shell
+env_set_path_for_shell
 
+# setting/unsetting path via launchctl
+#env_start_sudo			# already started above
+sudo launchctl config user path ''
+sudo launchctl config system path ''
+#env_stop_sudo			# done in trap
+
+
+### updating homebrew
 echo ''
-
+echo "updating and checking homebrew..."
 # checking installation and updating homebrew
 brew analytics on
 #cd /usr/local/Library && git stash && git clean -d -f
@@ -125,61 +136,80 @@ brew upgrade
 brew cleanup 1> /dev/null
 brew doctor
 
-# cleaning up
+
+### cleaning up
 echo ''
 echo "cleaning up..."
 
-cleanup_all_homebrew
+env_cleanup_all_homebrew
 
 
-# installing homebrew cask
+### installing homebrew cask
 echo ''
 echo "installing homebrew cask..."
 
-brew tap caskroom/cask
+brew tap homebrew/cask
 
-# activating keepingyouawake
-if [ -e /Applications/KeepingYouAwake.app ]
+
+### installing keepingyouawake
+#if [[ -e "$PATH_TO_APPS"/KeepingYouAwake.app ]]
+if [[ $(brew cask list | grep "^keepingyouawake$") != "" ]]
 then
     :
 else
     echo ''
     echo "installing keepingyouawake..."
-    builtin printf '"$SUDOPASSWORD\n"' | brew cask install --force keepingyouawake 2> /dev/null | grep "successfully installed"
-    # avoiding "this dapplication is downloaded from the internet. do you really want to open it?" message on first run
-    # must be reset from .xattr file or be reinstalling later
-    xattr -p com.apple.quarantine "/Applications/KeepingYouAwake.app" > /tmp/quarantine_keepingyouawake.xattr
-    xattr -d com.apple.quarantine "/Applications/KeepingYouAwake.app"
+    env_use_password | brew cask install --force keepingyouawake 2> /dev/null | grep "successfully installed"
+    sleep 1
 fi
-#activating_keepingyouawake
 
-# installing cask repair to contribute to homebrew casks
-echo ''
+
+### activating keepingyouawake
+env_activating_keepingyouawake
+
+
+### installing cask repair to contribute to homebrew casks
+#echo ''
 echo "installing cask-repair..."
 brew install vitorgalvao/tiny-scripts/cask-repair
 #cask-repair --help
 # fixing red dots before confirming commit that prevent the commit from being made
 # https://github.com/vitorgalvao/tiny-scripts/issues/88
+# gem uninstall -ax rubocop rubocop-cask
+# brew cask style
+# if this is not working try with sudo
 # sudo gem uninstall -ax rubocop rubocop-cask
 # brew cask style
+# if this is not working remove the version of gem which brew cask style complains about, e.g.
+# rm -rf /Users/"$USER"/.gem/ruby/2.6.0/
+# brew cask style
 
-# installing parallel as dependency for the other scripts
-if [[ "$(which parallel)" == "" ]]
+
+### installing parallel as dependency for the other scripts
+if command -v parallel &> /dev/null
 then
+    # installed
+    :
+else
+    # not installed
     echo ''
     echo "installing parallel..."
     brew install parallel
     #echo ''
-else
-    :
 fi
 
-# cleaning up
+
+### cleaning up
 echo ''
 echo "cleaning up..."
 
-cleanup_all_homebrew
+env_cleanup_all_homebrew
     
 
 ### stopping sudo
-stop_sudo
+# done in trap
+#env_stop_sudo
+
+
+### stopping the error output redirecting
+if [[ "$RUN_FROM_BATCH_SCRIPT" == "yes" ]]; then env_stop_error_log; else :; fi

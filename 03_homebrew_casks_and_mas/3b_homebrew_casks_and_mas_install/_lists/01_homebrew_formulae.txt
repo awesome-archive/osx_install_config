@@ -4,17 +4,18 @@ pv		# backup/restore script
 coreutils	# backup/restore script
 parallel	# backup/restore script
 gnupg		# backup/restore script
-openssl		# certificate install/update script
+openssl@1.1	# certificate install/update script
 git		# hosts file script, screen resolution script
 rename		# rename scripts
 htop		# if htop is not working, use glances instead
 #glances
 ghostscript	# pdf shrink script
 xpdf		# pdf shrink script
-ffmpeg		# video encoding script
-qtfaststart	# video encoding script
+#ffmpeg		# video encoding script
+#qtfaststart	# video encoding script
 jq		# casks and casks update script
 cliclick	# backup/restore script
 python		# icon scripts, build scripts, hosts file script, screen resolution script
 macosvpn	# network script
 #node		# npm command
+wakeonlan	# send magic packet to wake devices over lan

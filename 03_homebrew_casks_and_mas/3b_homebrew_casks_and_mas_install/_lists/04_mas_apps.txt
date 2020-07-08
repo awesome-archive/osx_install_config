@@ -6,10 +6,11 @@
 409183694	Keynote
 824183456	Affinity Photo
 824171161	Affinity Designer
+881418622	Affinity Publisher
 595374522	VirusScannerPlus
 1209754386	eDrawings
 477670270       2Do
-1295203466 	Microsoft Remote Desktop 10
+1295203466 	Microsoft Remote Desktop
 483820530	QR Journal
 1292198261	iMazing HEIC Converter
 #509182449	Photo Transfer App
@@ -25,3 +26,5 @@
 1387766656	Overflow 3
 1197662954	HashBox
 #1055555711	fHash
+1294126402	HEIC Converter
+1037126344 	Apple Configurator 2

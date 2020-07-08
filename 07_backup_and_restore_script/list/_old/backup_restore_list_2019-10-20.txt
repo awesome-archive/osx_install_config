@@ -1,0 +1,826 @@
+# 2Do
+#echo 2Do
+#u	/Applications/2Do.app
+#u	~/Library/Application Support/Backups
+#u	~/Library/Containers/com.guidedways.TodoMac/Data/Library/Preferences/com.guidedways.TodoMac.plist
+
+# Accounts
+echo Accounts
+u	~/Library/Preferences/MobileMeAccounts.plist
+u	~/Library/Accounts
+
+# AddressBook
+echo AddressBook
+u	~/Library/Application Support/AddressBook
+u	~/Library/Address Book Plug-Ins
+
+# Adobe Acrobat Reader
+echo Adobe Acrobat Reader
+u	~/Library/Preferences/com.adobe.Reader.plist
+#u	/Library/Preferences/com.adobe.reader.DC.WebResource.plist
+
+# Adobe Color Sync
+echo Adobe Color Sync
+u	~/Library/Application Support/Adobe/Color/Settings/color_sync_adobe_cs.csf
+u	~/Library/Preferences/Adobe/Color/ACEConfigCache2.lst
+
+# Adobe Indesign
+echo Adobe Indesign
+u	~/Library/Preferences/com.adobe.InDesign.plist
+u	~/Library/Preferences/Adobe InDesign
+
+# Adobe Photoshop
+echo Adobe Photoshop
+u	~/Library/Preferences/Adobe Photoshop CS5.1 Settings
+
+# Adobe PDF Settings
+echo Adobe PDF Settings
+u	~/Library/Application Support/Adobe/Adobe PDF/Settings/ebook.joboptions
+
+# Affinity
+echo Affinity
+u	~/Library/Containers/com.seriflabs.affinitypublisher/Data/Library/Application Support/user/file_export_options.dat
+u	~/Library/Containers/com.seriflabs.affinitypublisher/Data/Library/Preferences/com.seriflabs.affinitypublisher.plist
+u	~/Library/Containers/com.seriflabs.affinitydesigner/Data/Library/Application Support/user/file_export_options.dat
+u	~/Library/Containers/com.seriflabs.affinitydesigner/Data/Library/Preferences/com.seriflabs.affinitydesigner.plist
+u	~/Library/Containers/com.seriflabs.affinityphoto/Data/Library/Application Support/user/file_export_options.dat
+u	~/Library/Containers/com.seriflabs.affinityphoto/Data/Library/Preferences/com.seriflabs.affinityphoto.plist
+
+# Alfred
+echo Alfred
+#u	/Applications/Alfred 4.app
+u	~/Library/Application Support/Alfred
+u	~/Library/Preferences/com.runningwithcrayons.Alfred.plist
+u	~/Library/Preferences/com.runningwithcrayons.Alfred-Preferences.plist
+
+# Angry IP Scanner
+#echo Angry IP Scanner
+#u	/Applications/Angry IP Scanner.app
+
+# Apple Configurator 2
+echo Apple Configurator 2
+u	~/Library/Group Containers/K36BKF7T3D.group.com.apple.configurator/Library/Application Support
+u	~/Library/Containers/com.apple.configurator.ui
+
+# Apple Mail
+echo Apple Mail
+u	~/Library/Mail
+u	~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist
+
+# Apple Mobile Sync 
+# included in files backup
+#echo Apple Mobile Sync
+#u	~/Library/Application Support/MobileSync
+
+# AppCleaner
+echo AppCleaner
+#u	/Applications/AppCleaner.app
+u	~/Library/Preferences/com.freemacsoft.AppCleaner-Helper.plist
+u	~/Library/Preferences/com.freemacsoft.AppCleaner.plist
+
+# AudioBookBinder
+#echo AudioBookBinder
+#u	/Applications/AudioBookBinder.app
+
+# AudioSwitcher
+#echo AudioSwitcher
+#u	/Applications/AudioSwitcher.app
+
+# Avast
+#echo Avast
+#u	/Applications/Avast.app
+#u	/Library/Application Support/Avast/config/com.avast.daemon.conf
+#u	/Library/Application Support/Avast/config/com.avast.proxy.conf
+#u	/Library/Application Support/Avast/config/com.avast.fileshield.conf
+#u	~/Library/Preferences/com.avast.helper.plist
+
+# AVG Antivirus
+#echo AVG Antivirus
+#u	/Applications/Avast.app
+#u	/Library/Application Support/AVGAntivirus/config/com.avg.proxy.conf
+#u	/Library/Application Support/AVGAntivirus/config/com.avg.update.conf
+#u	/Library/Application Support/AVGAntivirus/config/com.avg.daemon.conf
+#u	/Library/Application Support/AVGAntivirus/config/com.avg.daemon.whls
+#u	/Library/Application Support/AVGAntivirus/config/com.avg.fileshield.conf
+
+# backupList+
+#echo backupList+
+#u	/Applications/backupList+.app
+#u	~/Library/Application Support/Backuplist
+#u	~/Library/Preferences/com.rdutoit.backupList.plist
+
+# Bartender
+echo Bartender
+#u	/Applications/Bartender 3.app
+u	~/Library/Preferences/com.surteesstudios.Bartender.plist
+
+# BBEdit
+echo BBEdit
+#u	/Applications/BBEdit.app
+u	~/Library/Application Support/BBEdit
+u	~/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist
+
+# BL Banking
+echo BL Banking
+u	/Applications/BL Banking Launcher.app
+
+# Brackets
+echo Brackets
+#u	/Applications/Brackets.app
+u	~/Library/Application Support/Brackets/brackets.json
+u	~/Library/Application Support/Brackets/state.json
+
+# Bresink Software Updater
+echo Bresink Software Updater
+u	/Applications/BresinkSoftwareUpdater.app
+u	/Library/PrivilegedHelperTools/BresinkSoftwareUpdater-PrivilegedTool
+u	/Library/LaunchDaemons/BresinkSoftwareUpdater-PrivilegedTool.plist
+
+# Brew Casks Update
+echo Brew Casks Update
+u	/Applications/brew_casks_update.app
+
+# Burn
+#echo Burn
+#u	/Applications/Burn.app
+
+# Calendar
+echo Calendar
+u	~/Library/Application Support/iCal
+u	~/Library/Calendars
+
+# Checksum
+#echo Checksum
+#u	/Applications/Checksum.app
+
+# Chromium
+echo Chromium
+#u	/Applications/Chromium.app
+#u	/Applications/chromium
+#u	~/Library/Application Support/Chromium
+
+# Clover Configurator Pro
+#u	/Applications/Clover Configurator Pro.app
+#u	~/Library/Preferences/com.m79softwares.Clover-Configurator-Pro.plist
+
+# coconutBattery
+#echo coconutBattery
+#u	/Applications/coconutBattery.app
+
+# Color Profiles
+echo Color Profiles
+u	/Library/ColorSync/Profiles/eci
+#u	~/Library/ColorSync
+
+# Commander One
+echo Commander One
+#u	/Applications/Commander One.app
+u	~/Library/Preferences/com.eltima.cmd1.plist
+
+# CotEditor
+echo CotEditor
+#u	/Applications/CotEditor.app
+u	~/Library/Containers/com.coteditor.CotEditor/Data/Library/Application Support/CotEditor
+u	~/Library/Containers/com.coteditor.CotEditor/Data/Library/Preferences/com.coteditor.CotEditor.plist
+
+# Cyberduck
+echo Cyberduck
+#u	/Applications/Cyberduck.app
+u	~/Library/Group Containers/G69SCX94XU.duck
+u	~/Library/Preferences/ch.sudo.cyberduck.plist
+
+# Dashboard
+echo Dashboard
+u	~/Library/Preferences/com.apple.dashboard.client.plist
+u	~/Library/Preferences/com.apple.dashboard.plist
+u	~/Library/Preferences/widget-com.apple.widget.calendar.plist
+#u	~/Library/Preferences/widget-com.apple.widget.stocks.plist
+#u	~/Library/Preferences/widget-com.apple.widget.translation.plist
+#u	~/Library/Preferences/widget-com.apple.widget.unitconverter.plist
+u	~/Library/Preferences/widget-com.apple.widget.weather.plist
+u	~/Library/Preferences/widget-ws.merl.widget.wetter.plist
+
+# Defaults open with
+echo Defaults open with
+u	~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist
+
+# Deluge
+#echo Deluge
+#u	/Applications/Deluge.app
+
+# Dialectic
+#echo Dialectic
+#u	/Applications/Dialectic.app
+#u	/Applications/dialectic_login
+#u	~/Library/Application Support/Dialectic
+#u	~/Library/Preferences/com.jen.dialectic.dialer.snomipphone.plist
+#u	~/Library/Preferences/com.jen.dialectic.plist
+
+# Disk Inventory X
+#echo Disk Inventory X
+#u	/Applications/Disk Inventory X.app
+
+# Documents backup
+echo Documents backup
+u	~/Documents/backup
+
+# EagleFiler
+echo EagleFiler
+#u	/Applications/EagleFiler.app
+u	~/Library/Preferences/com.c-command.EagleFiler.plist
+
+# EasyFind
+echo EasyFind
+#u	/Applications/EasyFind.app
+u	~/Library/Preferences/org.grunenberg.EasyFind.plist
+
+# Editra
+#echo Editra
+#u	/Applications/Editra.app
+#u	~/Library/Application Support/Editra
+#u	~/Library/Preferences/org.editra.Editra.plist
+
+# FileZilla
+echo FileZilla
+#u	/Applications/FileZilla.app
+u	~/Library/Preferences/de.filezilla.plist
+
+# Firefox
+echo Firefox
+#u	/Applications/Firefox.app
+u	~/Library/Application Support/Firefox
+u	~/Library/Preferences/org.mozilla.firefox.plist
+
+# Fonts
+echo Fonts
+u	~/Library/Fonts
+
+# garagesale
+#echo garagesale
+#u	~/Library/Preferences/com.iwascoding.garagesale.plist
+
+# GeburtstagsChecker
+echo GeburtstagsChecker
+#u	/Applications/GeburtstagsChecker.app
+u	~/Library/Preferences/earthlingsoft.GeburtstagsChecker.plist
+
+# geierlein
+#echo geierlein
+#u	/Applications/geierlein
+
+# GitHub Desktop
+echo GitHub Desktop
+u	~/.gitconfig
+#u	/Applications/GitHub Desktop.app
+u	~/Library/Application Support/GitHub Desktop
+u	~/Library/Preferences/com.github.GitHub.plist
+
+# Google Earth Pro
+echo Google Earth Pro
+#u	/Applications/Google Earth Pro.app
+u	/Library/Internet Plug-Ins/Google Earth Web Plug-in.plugin
+u	~/Library/Application Support/Google Earth
+u	~/Library/Preferences/com.Google.GECommonSettings.plist
+u	~/Library/Preferences/com.Google.GoogleEarthPro.plist
+
+# HandBrake
+#echo HandBrake
+#u	/Applications/HandBrake.app
+
+# Hotspot Shield
+#echo Hotspot Shield
+#u	/Applications/Hotspot Shield.app
+
+# iBackup Viewer
+#echo iBackup Viewer
+#u	/Applications/iBackup Viewer.app
+
+# iBackup
+#echo iBackup
+#u	/Applications/iBackup.app
+#u	~/Library/Application Support/iBackup
+#u	~/Library/Preferences/ch.grapefruit.iBackup.plist
+
+# IINA
+echo IINA
+#u	/Applications/IINA.app
+u	~/Library/Preferences/com.colliderli.iina.plist
+
+# ImageOptim
+echo ImageOptim
+#u	/Applications/ImageOptim.app
+u	~/Library/Preferences/net.pornel.ImageOptim.plist
+
+# iMazing
+echo iMazing
+#u	/Applications/iMazing.app
+u	~/Library/Application Support/iMazing/
+u	~/Library/Preferences/com.DigiDNA.iMazing2Mac.plist
+u	~/Library/Preferences/com.DigiDNA.SharedPreferences.plist
+
+# InsomniaX
+#echo InsomniaX
+#u	/Applications/InsomniaX.app
+#u	~/Library/Preferences/net.semaja2.InsomniaX.plist
+
+# iStat Menus
+echo iStat Menus
+#u	/Applications/iStat Menus.app
+u	~/Library/Preferences/com.bjango.istatmenus.plist
+u	~/Library/Preferences/com.bjango.istatmenus6.extras.plist
+#u	~/Library/Preferences/com.iSlayer.iStatMenusPreferences.plist
+u	~/Library/LaunchAgents/com.bjango.istatmenus.agent.plist
+u	~/Library/LaunchAgents/com.bjango.istatmenus.status.plist
+u	/Library/Application Support/iStat Menus 6
+u	/Library/PrivilegedHelperTools/com.bjango.istatmenus.installerhelper
+u	/Library/LaunchDaemons/com.bjango.istatmenus.fans.plist
+u	/Library/LaunchDaemons/com.bjango.istatmenus.daemon.plist
+u	/Library/LaunchDaemons/com.bjango.istatmenus.installerhelper.plist
+
+# iTerm
+echo iTerm
+#u	/Applications/iTerm.app
+u	~/Library/Preferences/com.googlecode.iterm2.plist
+
+# jameica
+echo jameica
+#u	/Applications/jameica.app
+u	~/Library/jameica
+
+# JDownloader
+#echo JDownloader
+#u	/Applications/JDownloader2.app
+
+# KeePassX
+echo KeePassX
+#u	/Applications/KeePassX.app
+u	~/Library/Preferences/org.keepassx.keepassx.plist
+
+# KeepingYouAwake
+echo KeepingYouAwake
+#u	/Applications/KeepingYouAwake.app
+#u	~/Library/Application Support/KeepingYouAwake
+u	~/Library/Containers/info.marcel-dierkes.KeepingYouAwake/Data/Documents
+#u	~/Library/Preferences/info.marcel-dierkes.KeepingYouAwake.plist
+u	~/Library/Containers/info.marcel-dierkes.KeepingYouAwake/Data/Library/Preferences/info.marcel-dierkes.KeepingYouAwake.plist
+
+# Keka
+echo Keka
+#u	/Applications/Keka.app
+u	~/Library/Containers/com.aone.keka/Data/Library/Preferences/com.aone.keka.plist
+
+# Keychain
+echo Keychain
+u	~/Library/Preferences/com.apple.keychainaccess.plist
+u	~/Library/Keychains
+
+# LaunchAgents
+#echo LaunchAgents
+#u	~/Library/LaunchAgents/com.run_script_on_network_change.plist
+#u	~/Library/LaunchAgents/com.run_script_on_boot.plist
+
+# LaunchDaemons
+#echo LaunchDaemons
+#u	/Library/LaunchDaemons/com.hostsfile.install_update.plist
+
+# LibreOffice
+echo LibreOffice
+#u	/Applications/LibreOffice.app
+u	~/Library/Application Support/LibreOffice/4/user/registrymodifications.xcu
+
+# LiteIcon
+echo LiteIcon
+#u	/Applications/LiteIcon.app
+u	~/Library/Preferences/net.freemacsoft.LiteIcon.plist
+
+# lock_screen
+echo lock_screen
+u	/Applications/lock_screen.app
+u	/Applications/lock_screen_and_sleep_mac.app
+
+# MacDown
+echo MacDown
+#u	/Applications/MacDown.app
+u	~/Library/Application Support/MacDown
+u	~/Library/Preferences/com.uranusjr.macdown.plist
+
+# MacPass
+echo MacPass
+#u	/Applications/MacPass.app
+u	~/Library/Application Support/MacPass
+u	~/Library/Preferences/com.hicknhacksoftware.MacPass.plist
+
+# Macs Fan Control
+echo Macs Fan Control
+#u	/Applications/Macs Fan Control.app
+u	~/Library/Preferences/com.crystalidea.macsfancontrol.plist
+
+# MacUpdate Desktop
+#echo MacUpdate Desktop
+#u	/Applications/MacUpdate Desktop.app
+
+# Microsoft Office 365
+echo Microsoft Office 365
+u	~/Library/Group Containers/UBF8T346G9.Office
+# relinking ~/Library/Group Containers/UBF8T346G9.Office/MicrosoftRegistrationDB.reg is done in 11k_third_party_app_preferences.sh
+
+# MonKey Office
+echo MonKey Office 2019
+u	/Applications/MonKey Office 2019.app
+u	~/Library/Application Support/ProSaldo
+u	~/Library/Preferences/com.prosaldo.monkeyoffice2019.plist
+
+# muCommander
+echo muCommander
+#u	/Applications/muCommander.app
+u	~/Library/Preferences/muCommander
+
+# mysides
+echo mysides
+u	/usr/local/bin/mysides
+
+# NameChanger
+#echo NameChanger
+#u	/Applications/NameChanger.app
+
+# Nextcloud
+echo Nextcloud
+u	~/Library/Application Support/Nextcloud
+
+# Ondesoft AudioBook Converter
+echo Ondesoft AudioBook Converter
+#u	/Applications/Ondesoft AudioBook Converter.app
+u	~/Library/Preferences/com.ondesoft.audiobookconverter.plist
+
+# OnyX
+echo OnyX
+#u	/Applications/OnyX.app
+u	~/Library/Preferences/com.titanium.OnyX.plist
+
+# OpenOffice
+#echo OpenOffice
+#u	/Applications/OpenOffice.app
+#u	~/Library/Application Support/OpenOffice
+
+# Overflow
+#echo Overflow
+#u	/Applications/Overflow.app
+#u	~/Library/Application Support/Overflow
+#u	~/Library/Preferences/com.stuntsoftware.Overflow.plist
+
+# Overflow 3
+echo Overflow 3
+#u	/Applications/Overflow 3.app
+u	~/Library/Containers/com.stuntsoftware.Overflow3/Data/Library/Preferences/com.stuntsoftware.Overflow3.plist
+u	~/Library/Containers/com.stuntsoftware.Overflow3/Data/Library/Application Support/default.realm
+
+# Pages4
+#echo Pages4
+#u	/Applications/Pages4.app
+
+# Paragon ExtFS
+echo Paragon ExtFS
+u	~/Library/Preferences/com.paragon-software.extfs.fsapp.plist
+#u	~/Library/Preferences/com.paragon-software.extfs.FSMenuApp.plist
+u	~/Library/Preferences/com.paragon-software.ExtFS.prefpane.plist
+u	~/Library/Preferences/com.paragon-software.filesystems.extfs.plist
+#u	~/Library/Preferences/com.paragon-software.filesystems.ExtFS.prefpanel.plist
+u	/Users/Shared/Paragon Software/Preferences_ExtFS.plist
+
+# PasswordWallet
+echo PasswordWallet
+u	/Applications/PasswordWallet.app
+u	~/Library/Preferences/com.selznick.PasswordWallet.plist
+
+# Password Factory
+echo Password Factory
+u	~/Library/Containers/com.cloudthirteen.Password-Factory/Data/Library/Preferences/com.cloudthirteen.Password-Factory.plist
+
+# PDF Shrink
+#echo PDF Shrink
+#u	/Applications/PDF Shrink.app
+#u	~/Library/Application Support/Apago
+#u	~/Library/Preferences/com.apago.PDFShrink.plist
+
+# pdf_shrink
+echo pdf shrink
+u	/Applications/pdf_200dpi_shrink.app
+#u	/Applications/pdf_ebook_shrink.app
+#u	/Applications/pdf_printer_shrink.app
+
+# PDF Unlock
+#echo PDF Unlock
+#u	/Applications/PDF Unlock.app
+#u	~/Library/Preferences/com.brinscall.pdfunlock.plist
+#u	~/Library/Preferences/PDFUnlock.plist
+
+# PhotoSync
+#echo PhotoSync
+#u	/Applications/PhotoSync.app
+
+# Plex Media Server
+#echo Plex Media Server
+#u	/Applications/Plex Media Server.app
+#u	~/Library/Application Support/Plex Media Server
+#u	~/Library/Preferences/com.plexapp.plexmediaserver.plist
+
+# PrefsEdit
+echo PrefEdit
+u	/Applications/PrefEdit.app
+
+# Print Window
+echo Print Window
+u	/Applications/Print Window.app
+
+# Printers
+echo Printers
+# sudo launchctl stop org.cups.cupsd
+u 	~/.cups/lpoptions
+u	~/Library/Printers/
+u	~/Library/Preferences/com.apple.print.custompresets.forprinter.canon_ir_adv_c3325if.plist
+#u	~/Library/Preferences/com.apple.print.custompapers.plist
+u	/etc/cups/ppd/canon_ir_adv_c3325if.ppd
+u	/etc/cups/printers.conf
+u	/Library/Printers/PPDs/Contents/Resources/CNMCIRAC3325S2.ppd.gz
+u	/Library/Printers/Canon/CUPSPS2
+# sudo launchctl start org.cups.cupsd
+
+# Progressive Downloader
+echo Progressive Downloader
+#u	/Applications/Progressive Downloader.app
+u	~/Library/Preferences/com.PS.PSD.plist
+
+# PVGuard
+echo PVGuard
+u	~/PVGuardClient
+
+# Quicksilver
+echo Quicksilver
+#u	/Applications/Quicksilver.app
+u	~/Library/Application Support/Quicksilver
+u	~/Library/Preferences/com.blacktree.Quicksilver.plist
+
+# Reminders
+echo Reminders
+u	~/Library/Reminders
+
+# Remote Buddy
+#echo Remote Buddy
+#u	/Applications/Remote Buddy.app
+
+# Remote Desktop
+echo Remote Desktop
+u	~/Library/Containers/com.microsoft.rdc.macos/Data/Library/Preferences/com.microsoft.rdc.macos.plist
+
+# rename_photos
+echo rename_photos
+u	/Applications/rename_date_photos.app
+#u	/Applications/rename_number_photos.app
+
+# ResizeIt
+echo ResizeIt
+u	/Applications/ResizeIt.app
+u	~/Library/Preferences/sekn.ResizeIt.plist
+
+# Safari
+echo Safari
+u	~/Library/Safari/Extensions
+#u	~/Library/Preferences/com.apple.Safari.Extensions.plist
+u	~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari.Extensions.plist
+u	~/Library/Safari/Bookmarks.plist
+u	~/Library/Group Containers/*.better.fyi
+u	~/Library/Group Containers/*.ghostery.lite
+u	~/Library/Group Containers/*.com.adguard.safari.AdGuard
+u	~/Library/Containers/com.adguard.safari.AdGuard/Data/Library/Application Support/AdGuardSafariApp/config.json
+u	~/Library/Containers/com.apple.Safari/Data/Library/WebKit/ContentExtensions
+u	~/Library/Cookies/Cookies.binarycookies
+u	/Applications/Google Analytics Opt Out.app
+
+# Scripts
+echo Scripts
+u	/Library/Scripts/custom
+u	~/Library/Scripts
+
+# Services User and Services Keyboard Shortcuts
+echo Services and Shortcuts
+u	~/Library/Services/Run as Shellscript.workflow
+u	~/Library/Services/Run in Terminal.workflow
+u	~/Library/Services/Create Symlink.workflow
+u	~/Library/Preferences/pbs.plist
+u	~/Library/Services/Tag Orange.workflow
+u	~/Library/Services/dial_snom.workflow
+u	~/Library/Services/split_pdfs.workflow
+u	~/Library/Services/restart_reminder_service.workflow
+# /System/Library/CoreServices/pbs -flush
+
+# Signal
+echo Signal
+#u	/Applications/Signal.app
+u	~/Library/Application Support/Signal
+
+# Sky Go
+echo Sky Go
+u	~/Applications/Sky Go.app
+u	~/Library/Application Support/Sky Go
+u	~/Library/Preferences/com.bskyb.skygoplayer.helper.plist
+u	~/Library/Preferences/com.bskyb.skygoplayer.plist
+
+# Skype
+echo Skype
+#u	/Applications/Skype.app
+u	~/Library/Application Support/Skype
+u	~/Library/Preferences/com.skype.skype.plist
+
+# SMARTReporter
+echo SMARTReporter
+#u	/Applications/SMARTReporter.app
+u	~/Library/Preferences/com.corecode.SMARTReporter.plist
+
+# smb service
+echo smb service
+u	/Applications/smb_disable.app
+u	/Applications/smb_enable.app
+
+# Spotify
+echo Spotify
+#u	/Applications/Spotify.app
+u	~/Library/Application Support/Spotify
+u	~/Library/Preferences/com.spotify.client.plist
+#u	~/Library/Cookies/com.spotify.client.binarycookies
+
+# ssh
+echo ssh
+u	~/.ssh
+
+# SyncTwoFolders
+#echo SyncTwoFolders
+#u	/Applications/SyncTwoFolders.app
+
+# Telegram
+#echo Telegram
+#u	/Applications/Telegram.app
+#u	~/Library/Application Support/Telegram
+#u	~/Library/Containers/ru.keepcoder.Telegram/Data/Library/Preferences/ru.keepcoder.Telegram.plist
+#u	~/Library/Preferences/ru.keepcoder.Telegram.plist
+
+# TextMate
+#echo TextMate
+#u	/Applications/TextMate.app
+u	~/Library/Application Support/TextMate/Bundles/Themes.tmbundle
+u	~/Library/Application Support/TextMate/Global.tmProperties
+u	~/Library/Preferences/com.macromates.TextMate.plist
+
+# The Archive Browser
+echo The Archive Browser
+#u	/Applications/The Archive Browser.app
+u	~/Library/Preferences/cx.c3.thearchivebrowser.plist
+u	~/Library/Application Support/The Archive Browser
+
+# The Unarchiver
+#echo The Unarchiver
+#u	/Applications/The Unarchiver.app
+
+# TinkerTool
+echo TinkerTool
+u	/Applications/TinkerTool.app
+
+# TNEF's Enough
+#echo TNEF's Enough
+#u	/Applications/TNEF's Enough.app
+
+# Transmission
+echo Transmission
+#u	/Applications/Transmission.app
+u	~/Library/Application Support/Transmission
+u	~/Library/Preferences/org.m0k.transmission.plist
+
+
+# trolCommander
+echo TrolCommander
+#u	/Applications/trolCommander.app
+u	~/Library/Preferences/trolCommander
+
+# Tunnelblick
+echo Tunnelblick
+u	/Applications/Tunnelblick.app
+u	~/Library/Preferences/net.tunnelblick.tunnelblick.plist
+u	~/Library/Application Support/Tunnelblick
+
+# unarchive and decrypt
+echo unarchive and decrypt
+u	/Applications/decrypt_finder_input_gpg_progress.app
+u	/Applications/unarchive_finder_input_tar_gz_gpg_preserve_permissions_progress.app
+
+# Unified Remote
+echo Unified Remote
+#u	/Applications/Unified Remote.app
+u	~/Library/Application Support/Unified Remote
+
+# UnHidden
+#echo UnHidden
+#u	/Applications/UnHidden.app
+
+# User config
+echo User config
+u	~/.config
+
+# VeraCrypt
+echo VeraCrypt
+u	~/Library/Application Support/VeraCrypt
+u	~/Library/Preferences/org.idrix.VeraCrypt.plist
+
+# VideoMonkey
+#echo VideoMonkey
+#u	/Applications/VideoMonkey.app
+#u	~/Library/Preferences/org.VideoMonkey.VideoMonkey.plist
+
+# video ffmpeg
+echo video ffmpeg
+u	/Applications/video_720p_h265_aac_shrink.app
+#u	/Applications/video_1080p_h265_aac_shrink.app
+
+# VirtualBox
+echo VirtualBox
+u	~/Library/Preferences/org.virtualbox.app.VirtualBox.plist
+u	~/Library/Preferences/org.virtualbox.app.VirtualBoxVM.plist
+u	~/Library/VirtualBox
+
+# VirtualBox Menulet
+echo VirtualBox Menulet
+u	/Applications/VirtualBox Menulet.app
+u	~/Library/Preferences/com.kiwifruitware.VirtualBox_Menulet.plist
+
+# Virus Scanner Plus
+echo Virus Scanner Plus
+#u	~/Library/Preferences/com.bitdefender.virusscannerplus.plist
+u	~/Library/Containers/com.bitdefender.virusscannerplus/Data/Library/Preferences/com.bitdefender.virusscannerplus.plist
+u	~/Library/Containers/com.bitdefender.virusscannerplus/Data/Library/Application Support/Bitdefender Virus Scanner Plus/antivirus.bundle/exclusions.plist
+u	~/Library/Containers/com.bitdefender.virusscannerplus/Data/Documents/access_rights
+
+# VLC
+echo VLC
+#u	/Applications/VLC.app
+u	~/Library/Preferences/org.videolan.vlc.plist
+
+# VNC Viewer
+echo VNC Viewer
+#u	/Applications/VNC Viewer.app
+u	~/Library/Preferences/com.realvnc.vncviewer.plist
+u	~/.vnc
+
+# VOX
+echo VOX
+#u	/Applications/VOX.app
+u	~/Library/Containers/com.coppertino.Vox/Data/Library/Preferences/com.coppertino.Vox.plist
+
+# Whatsapp
+echo Whatsapp
+#u	/Applications/Whatsapp.app
+u	~/Library/Application Support/WhatsApp
+u	~/Library/Preferences/WhatsApp.plist
+
+# Widgets
+echo Widgets
+u	 ~/Library/Widgets/Wetter.wdgt
+
+# Winston
+#echo Winston
+#u	~/Library/Application Support/Winston
+
+# Wireguard
+#echo Wireguard
+#u	/Library/Preferences/SystemConfiguration/preferences.plist
+#u	/Library/Preferences/com.apple.networkextension.plist
+
+# Witch
+echo Witch
+#u	~/Library/PreferencePanes/Witch.prefPane
+u	~/Library/Application Support/Witch
+u	~/Library/Application Support/Many Tricks
+
+# X-Lite
+#echo X-Lite
+#u	/Applications/X-Lite.app
+
+# Xcode
+echo Xcode
+u	~/Library/Developer/Xcode/UserData
+
+# XnConvert
+echo XnConvert
+#u	/Applications/XnConvert.app
+u	~/Library/Preferences/com.xnview.XnConvert.plist
+
+# XtraFinder
+#echo XtraFinder
+#u	~/Library/Preferences/com.trankynam.XtraFinder.plist
+
+
+
+
+
+
+
+
+
+

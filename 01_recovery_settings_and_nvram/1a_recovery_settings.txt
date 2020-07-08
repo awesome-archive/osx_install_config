@@ -1,0 +1,58 @@
+recovery settings
+
+### boot into recovery
+# intel mac
+reboot with command + R pressed, release the keys when apple logo appears
+# silicon mac
+long press power button until menu appears
+
+Open Utilities - Terminal
+
+
+
+### sip
+csrutil status
+
+# more options available, see readme on github
+# for these scripts to work (and for using xtrafinder or totalfinder) use
+csrutil enable --without debug --without fs
+
+# if you want to reset sip to factory defaults use 
+csrutil clear
+
+
+
+### more configurations
+# allow virtualbox testing or beta version installation
+spctl kext-consent add VB5E2TV963
+
+# check entries
+spctl kext-consent list
+
+# remove entry
+#spctl kext-consent remove VB5E2TV963
+
+
+
+### allow usb boot
+# for macs that have a t2 chip and secure boot options, e.g. new macbook pro models
+# booting from usb is by default prevented by secure boot
+# to enable booting from an usb device, do...
+
+Open Utilities - Start-Up-Security-Utility
+Set Secure Boot to Full Protection.
+Set External Boot to allow booting from external usb devices.
+Reverse the external usb boot setting after finishing the installation.
+
+
+
+### set firmware password
+Open Utilities - Start-Up-Security-Utility
+set firmware password
+
+
+
+### reboot
+reboot to specified startup volume directly from recovery
+apple logo - startup volume
+select usb device (checks if booting to this volume is allowed)

@@ -7,7 +7,7 @@ I am not a developer but an apple user and admin for more than 10 years. A clean
 
 Therefore I initiated this project: to make clean installations (including restoring some already configured files from previous installations) and macOS configurations as simple, customizable and fast as possible by providing a walkthrough of a clean macOS install including manuals, scripts, comments and a lot of macOS intel.
 
-Furthermore I worked on some additional macOS scripts, e.g. [homebrew and cask updates](https://github.com/tiiiecherle/osx_install_config/tree/master/03_homebrew_casks_and_mas/3c_homebrew_formulae_and_casks_update), security and ad-blocking by [updating the hosts file](https://github.com/tiiiecherle/osx_install_config/tree/master/09_launchd/9b_run_on_boot/root/1_hosts_file) or [auto-selecting the network location](https://github.com/tiiiecherle/osx_install_config/tree/master/09_launchd/9b_run_on_boot/root/3_network_select) based on ethernet connectivity to mention just a few. These are not designed for a one-time configuration but for (automatic) regular usage after installation.
+Furthermore I worked on some additional macOS scripts, e.g. [homebrew and cask updates](https://github.com/tiiiecherle/osx_install_config/tree/master/03_homebrew_casks_and_mas/3c_homebrew_formulae_and_casks_update), security and ad-blocking by [updating the hosts file](https://github.com/tiiiecherle/osx_install_config/tree/master/09_launchd/9b_run_on_boot/root/1_hosts_file) or [auto-selecting the network location](https://github.com/tiiiecherle/osx_install_config/tree/master/09_launchd/9b_run_on_boot/root/3_network_select) based on ethernet connectivity, [on demand and monitored virus scanning](https://github.com/tiiiecherle/osx_install_config/tree/master/09_launchd/9b_run_on_boot/root/4_clamav_monitor) using clamav - to mention just a few. These are not designed for a one-time configuration but for (automatic) regular usage after installation.
 
 Of course, you can as well customize and run the commands and scripts on existing systems that did not lately get a clean install. All scripts and manuals are only optimized and updated for the latest available macOS and may or may not work on older versions.
 
@@ -27,6 +27,7 @@ Happy installing, customizing and enjoying macOS ;)
 Table of contents
 -----
 
+[Default shell and config file](#default-shell-and-config-file)  
 [Usage](#usage)  
 [0 Bootable usb device](#0bootable-usb-device)  
 [1 NVRAM, system integrity protection and secure boot](#1nvram-system-integrity-protection-and-secure-boot)  
@@ -43,10 +44,23 @@ Table of contents
 [12 Licenses](#12-licenses)  
 [13 Apple Mail and accounts](#13-apple-mail-and-accounts)  
 [14 Samba](#14-samba)  
-[15 Manual Preferences](#15-manual-preferences)  
+[15 Finalizations](#15-finalizations)  
 [16 Seed update configuration](#16-seed-update-configuration)  
 [Disclaimer](#disclaimer)  
 [Credits](#credits)  
+
+
+Default shell and config file
+-----
+In macOS 10.15 zsh replaces bash as default shell. I took the chance to rewrite and improve all scripts in many different aspects and functionality.
+
+For optimization and easier maintenance I introduced a [config file](https://github.com/tiiiecherle/osx_install_config/blob/master/_config_file/shellscriptsrc.sh) that is installed to `~/.shellscriptrc` and is sourced before running a lot of the scripts. It includes an auto-update function. Make sure the versions of the script and the config file are always up-to-date and compatible.
+
+The config file can be installed by using this command in the terminal:
+
+`curl -fsSL https://raw.githubusercontent.com/tiiiecherle/osx_install_config/master/_config_file/install_config_file.sh`
+
+From now on all scripts use zsh as default interpreter. At the time of the change (2019-07) all scripts are zsh and bash compatible, but further development is only being done for the default macOS shell, therefore zsh. Using bash instead of zsh can easily be achieved by using the bash shebang in the script.
 
 
 Usage
@@ -69,6 +83,18 @@ Before deleting everything on your drive and starting a clean macOS install make
 
 As mentioned above some scripts (e.g. homebrew-update, hosts, network-select, etc.) come with installer scripts that copy the needed files to the respective locations in the system and adjust their ownership and permissions. They can be used on a regular basis (some of them automatically) after installation.
 
+##### Batch Installation
+
+After a lot of changes to the structure, the content, the config file and the default shell in the scripts it's finally possible (as of 2019-09, macOS 10.14 and newer) to combine most of them as a batch installer. After customizing and adjusting all scripts to your needs follow these steps:
+
+0. Make a backup to an external drive/server/nas with the [backup script](#7backup-and-restore-script). Just to be safe I recommend an additional time machine backup.
+0. Create the [bootable usb device](#0bootable-usb-device) and perform a clean macOS install.
+0. Adjust the settings for [NVRAM, SIP and Secure Boot](#1nvram-system-integrity-protection-and-secure-boot).
+0. Use the [batch install scripts](https://github.com/tiiiecherle/osx_install_config/blob/master/_batch_run/) and reboot in between.
+
+This has the advantage that the scripts do not have to be run one by one. Instead the batch scripts sequentially processes all the scripts and play a sound when done. After each batch script check all outputs (and logfiles if needed) and reboot before starting the next one.
+
+This makes the install/restore itself easy, mostly unattended, clean and fast.
 
 0	Bootable usb device
 -----
@@ -113,22 +139,23 @@ If you want to disable SIP (partially or completely) follow these steps. Before 
 0. Open Utilities
 0. Open Terminal
 0. `csrutil status`
-0. `csrutil enable --without debug`
+0. `csrutil enable --without debug --without fs`
 0. `csrutil status`
 0. Reboot
 
 If SIP is enabled `csrutil status` shows the status of every SIP component. It is possible to disable one single component while keeping SIP partially enabled, e.g.:
 
 ```
-csrutil enable --no-internal  
+csrutil enable --no-internal
 csrutil enable --without kext  
 csrutil enable --without fs  
 csrutil enable --without debug  
 csrutil enable --without dtrace  
 csrutil enable --without nvram
+csrutil enable --without basesystem
 ```
-or multiple components can be disabled, e.g.:  
-`csrutil enable --without kext --without debug`
+or multiple components can be disabled, e.g. for these scripts to work use:  
+`csrutil enable --without debug --without fs`
 
 To disable SIP completely, use `csrutil disable`.  
 To enable all components, use `csrutil enable`.  
@@ -149,7 +176,11 @@ This can be reset for security reasons after finishing the installation.
 
 2	Preparations
 -----
+##### macOS Updates
 Script 2a updates macOS on the command line if the system should not be up to date. Script 2b is a short manual and checklist which contains a few steps that have to be done before continuing with the next steps.
+
+##### zsh as default shell und customizations
+[Install command line tools](https://github.com/tiiiecherle/osx_install_config/tree/master/02_preparations/2c_install_command_line_tools.sh) and [set zsh as default shell](https://github.com/tiiiecherle/osx_install_config/tree/master/02_preparations/2d_login_shell_customization.sh) incl. customizations with [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh).
 
 3	Homebrew, Casks and Mas
 -----
@@ -159,8 +190,8 @@ Mas makes it possible to install and update apps from the macOS appstore using t
 
 You will find more information here:
 
-* [homebrew](http://brew.sh)
-* [homebrew-cask](http://caskroom.io)
+* [homebrew](https://brew.sh)
+* [homebrew-cask](https://formulae.brew.sh/cask)
 * [mas-cli](https://github.com/mas-cli/mas)
 
 [These scripts](https://github.com/tiiiecherle/osx_install_config/tree/master/03_homebrew_casks_and_mas/3b_homebrew_casks_and_mas_install) install macOS Command Line Tools, homebrew, homebrew-cask and mas. Additionally, they take the entries from separate list files and install homebrew formulas, apps from the App Store, macOS-plugins and macOS-apps in parallel mode. It is like downloading and installing them manually but a lot faster and more comfortable. To easily keep all packages and apps up-to-date a [macOS-app Wrapper update script](https://github.com/tiiiecherle/osx_install_config/tree/master/03_homebrew_casks_and_mas/3c_homebrew_formulae_and_casks_update) is also included and can be installed to /Applications using the dmg installer.
@@ -199,23 +230,21 @@ This backup/restore tool is highly customizable, configurable and based on well-
 
 At first glance it seems a bit complicated but it really isn`t ;)
 
-When running the script by double clicking the `run_backup_script.command` you will be asked to select a user if you have multiple users on your mac. Afterwards you will be prompted by an applescript to choose a directory where to save the backup. The backup files and folders will temporarily be saved to `~/Desktop/backup_$USER_DATE` and is supposed to preserve all file permissions. In the next step the script creates a .tar.gz.gpg file of the backup folder (also on the Desktop) and checks the file integrity. After the test has passed successfully the file will be moved to the specified location and the temporary files on the Desktop get deleted.  It uses your macOS password to encrypt the backup.
+When running the script by double clicking the `run_backup_script.command` you will be asked to select a user if you have multiple users on your mac. Afterwards you will be prompted by an applescript to choose a directory where to save the backup. The backup files and folders will temporarily be saved to `~/Desktop/backup_$USER_DATE` and is supposed to preserve all file permissions. In the next step the script creates a .tar.gz.gpg file of the backup folder and checks the file integrity. After the test has passed successfully the temporary files on the Desktop get deleted. It uses your macOS password to encrypt the backup.
 
 The lines in the `.../list/backup_restore_list.txt` specify the files and folders to be backed up or restored.
 
-All lines that get backed up or restored start by an m (master) or u (user) and the script does a syntax check of the backup_restore_list.txt file at the beginning. Lines that are commented out are ignored and the echo lines will be displayed in the Terminal while running.
+All lines that get backed up or restored start by u (user) and the script does a syntax check of the backup_restore_list.txt file at the beginning. Lines that are commented out are ignored and the echo lines will be displayed in the Terminal while running.
 
 Over time the script gathered more and more backup options for different purposes, e.g. an applescript for backing up calendars, contacts and reminders using the GUI. 
 
 To make usage for multiple users easier and faster it can be run with profiles. More information can be found in the comments inside the script and in the example profile. To run the script with a profile, duplicate the example profile and name it `backup_profile_USER.conf`. Change USER to your logged in macOS username.
 
-If there are multiple macs that are not kept up to date every time with all apps and settings the script has a user/master mode. Everything that is marked as master will be restored from a selected master backup, all entries marked as user will be restored from the selected user backup. Master and user backups can be selected when running `run_restore_script.command`.
-
 ##### restore
 
 Make sure you only restore files and folders this way that were backed up with this script, so they have the correct structure inside the backup/restore directory. 
 
-If you do not use a master/user structure and only backup/restore one mac just select the same folder for master und user when the script prompts for the respective input.
+Select the folder containing the backup files when the script prompts for the respective input.
 
 Use `run_restore_script.command` to restore.
 
@@ -286,6 +315,7 @@ The following preferences are not yet configurable with the script. Any help to 
 
 * preferences - control center - sorting order
 * preferences - mac app store - download all bought apps on other macs automatically
+* preferences - user & groups - applying login window accessibility settings without opening the dialog in system preferences
 
 12 Licenses
 -----
@@ -324,7 +354,7 @@ For the fastest and most reliable connection in the current version it
 * deletes all other entries from nsmb.conf file.
 
 
-15 Manual Preferences
+15 Finalizations
 -----
 Despite all the automation, not everything in the process can be done by scripts yet. These files (for Apple apps and System Preferences) just give me a checklist of all preferences to be set manually. Every help to make this list shorter and add the settings to a script is welcome.
 

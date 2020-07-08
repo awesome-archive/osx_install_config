@@ -1,77 +1,44 @@
-#!/bin/bash
+#!/bin/zsh
+
+###
+### sourcing config file
+###
+
+if [[ -f ~/.shellscriptsrc ]]; then . ~/.shellscriptsrc; else echo '' && echo -e '\033[1;31mshell script config file not found...\033[0m\nplease install by running this command in the terminal...\n\n\033[1;34msh -c "$(curl -fsSL https://raw.githubusercontent.com/tiiiecherle/osx_install_config/master/_config_file/install_config_file.sh)"\033[0m\n' && exit 1; fi
+eval "$(typeset -f env_get_shell_specific_variables)" && env_get_shell_specific_variables
+
+
+
+###
+### run from batch script
+###
+
+
+### in addition to showing them in terminal write errors to logfile when run from batch script
+env_check_if_run_from_batch_script
+if [[ "$RUN_FROM_BATCH_SCRIPT" == "yes" ]]; then env_start_error_log; else :; fi
+
+
 
 ###
 ### asking password upfront
 ###
 
-# function for reading secret string (POSIX compliant)
-enter_password_secret()
-{
-    # read -s is not POSIX compliant
-    #read -s -p "Password: " SUDOPASSWORD
-    #echo ''
-    
-    # this is POSIX compliant
-    # disabling echo, this will prevent showing output
-    stty -echo
-    # setting up trap to ensure echo is enabled before exiting if the script is terminated while echo is disabled
-    trap 'stty echo' EXIT
-    # asking for password
-    printf "Password: "
-    # reading secret
-    read -r "$@" SUDOPASSWORD
-    # reanabling echo
-    stty echo
-    trap - EXIT
-    # print a newline because the newline entered by the user after entering the passcode is not echoed. This ensures that the next line of output begins at a new line.
-    printf "\n"
-    # making sure builtin bash commands are used for using the SUDOPASSWORD, this will prevent showing it in ps output
-    # has to be part of the function or it wouldn`t be updated during the maximum three tries
-    #USE_PASSWORD='builtin echo '"$SUDOPASSWORD"''
-    USE_PASSWORD='builtin printf '"$SUDOPASSWORD\n"''
-}
-
-# unset the password if the variable was already set
-unset SUDOPASSWORD
-
-# making sure no variables are exported
-set +a
-
-# asking for the SUDOPASSWORD upfront
-# typing and reading SUDOPASSWORD from command line without displaying it and
-# checking if entered password is the sudo password with a set maximum of tries
-NUMBER_OF_TRIES=0
-MAX_TRIES=3
-while [ "$NUMBER_OF_TRIES" -le "$MAX_TRIES" ]
-do
-    NUMBER_OF_TRIES=$((NUMBER_OF_TRIES+1))
-    #echo "$NUMBER_OF_TRIES"
-    if [ "$NUMBER_OF_TRIES" -le "$MAX_TRIES" ]
+if [[ "$SUDOPASSWORD" == "" ]]
+then
+    if [[ -e /tmp/tmp_batch_script_fifo ]]
     then
-        enter_password_secret
-        ${USE_PASSWORD} | sudo -k -S echo "" > /dev/null 2>&1
-        if [ $? -eq 0 ]
-        then 
-            break
-        else
-            echo "Sorry, try again."
-        fi
+        unset SUDOPASSWORD
+        SUDOPASSWORD=$(cat "/tmp/tmp_batch_script_fifo" | head -n 1)
+        USE_PASSWORD='builtin printf '"$SUDOPASSWORD\n"''
+        env_delete_tmp_batch_script_fifo
+        env_sudo
     else
-        echo ""$MAX_TRIES" incorrect password attempts"
-        exit
+        env_enter_sudo_password
     fi
-done
-
-# setting up trap to ensure the SUDOPASSWORD is unset if the script is terminated while it is set
-trap 'unset SUDOPASSWORD' EXIT
-
-# replacing sudo command with a function, so all sudo commands of the script do not have to be changed
-sudo()
-{
-    ${USE_PASSWORD} | builtin command sudo -p '' -k -S "$@"
-    #${USE_PASSWORD} | builtin command -p sudo -p '' -k -S "$@"
-    #${USE_PASSWORD} | builtin exec sudo -p '' -k -S "$@"
-}
+else
+    :
+fi
 
 
 
@@ -80,25 +47,20 @@ sudo()
 ### 
 
 ### variables
-SCRIPT_DIR=$(echo "$(cd "${BASH_SOURCE[0]%/*}" && pwd)")
-
 SERVICE_NAME=com.network.select
 SERVICE_INSTALL_PATH=/Library/LaunchDaemons
-SCRIPT_NAME=network_select
+SCRIPT_INSTALL_NAME=network_select
 SCRIPT_INSTALL_PATH=/Library/Scripts/custom
 
 LOGDIR=/var/log
-LOGFILE="$LOGDIR"/"$SCRIPT_NAME".log
-
-# UniqueID of loggedInUser
-loggedInUser=$(/usr/bin/python -c 'from SystemConfiguration import SCDynamicStoreCopyConsoleUser; import sys; username = (SCDynamicStoreCopyConsoleUser(None, None, None) or [None])[0]; username = [username,""][username in [u"loginwindow", None, u""]]; sys.stdout.write(username + "\n");')
-#UNIQUE_USER_ID="$(dscl . -read /Users/$loggedInUser UniqueID | awk '{print $2;}')"
-UNIQUE_USER_ID=$(id -u "$loggedInUser")
+LOGFILE="$LOGDIR"/"$SCRIPT_INSTALL_NAME".log
 
 # other launchd services
+# no longer needed as all other services are enabled independetly and check for
+# /tmp/network_select_in_progress to determine if network-select is still running
 other_launchd_services=(
-com.hostsfile.install_update
-com.cert.install_update
+#com.hostsfile.install_update
+#com.cert.install_update
 )
 
 launchd_services=(
@@ -110,14 +72,15 @@ launchd_services=(
 ### uninstalling possible old files
 echo ''
 echo "uninstalling possible old files..."
-. "$SCRIPT_DIR"/launchd_and_script/uninstall_"$SCRIPT_NAME"_and_launchdservice.sh
+. "$SCRIPT_DIR"/launchd_and_script/uninstall_"$SCRIPT_INSTALL_NAME"_and_launchdservice.sh
 wait
+eval "$(typeset -f env_get_shell_specific_variables)" && env_get_shell_specific_variables
 
 
 ### script file
 echo "installing script..."
 sudo mkdir -p "$SCRIPT_INSTALL_PATH"/
-sudo cp "$SCRIPT_DIR"/launchd_and_script/"$SCRIPT_NAME".sh "$SCRIPT_INSTALL_PATH"/"$SCRIPT_NAME".sh
+sudo cp "$SCRIPT_DIR"/launchd_and_script/"$SCRIPT_INSTALL_NAME".sh "$SCRIPT_INSTALL_PATH"/"$SCRIPT_INSTALL_NAME".sh
 sudo chown -R root:wheel "$SCRIPT_INSTALL_PATH"/
 sudo chmod -R 755 "$SCRIPT_INSTALL_PATH"/
 
@@ -138,48 +101,48 @@ echo "running installed script..."
 # sudo privileges inside the called script will not timeout
 # script will run as root later anyway
 #echo ''
-sudo "$SHELL" -c "$SCRIPT_INSTALL_PATH"/"$SCRIPT_NAME".sh &
-# wait < <(jobs -p) works, but is bash only, not posix compatible
-# wait $(jobs -p)
-for job in $(jobs -p)
-do
-	wait ${job} ||  echo "at least one job did not exit cleanly => $?"
-done
+sudo "$SCRIPT_INTERPRETER" -c "$SCRIPT_INSTALL_PATH"/"$SCRIPT_INSTALL_NAME".sh &
+wait
 
 
 ### unloading and disabling launchd services launched by network_select
-echo ''
-echo "unloading other launchd services..."
-for i in "${other_launchd_services[@]}"
-do
-    if [[ $(sudo launchctl list | grep "$i") != "" ]];
-    then
-        echo "unloading "$i"..."
-        sudo launchctl unload /Library/LaunchDaemons/"$i".plist
-    else
-        :
-    fi
-done
-
-echo ''
-echo "disabling other launchd services..."
-for i in "${other_launchd_services[@]}"
-do
-    if [[ $(sudo launchctl print-disabled system | grep "$i" | grep false) != "" ]];
-    then
-        echo "disabling "$i"..."
-        sudo launchctl disable system/"$i"
-    else
-        :
-    fi
-done
-
+#echo ''
+configure_other_launchd_services() {
+    echo "unloading other launchd services..."
+    for i in "${other_launchd_services[@]}"
+    do
+        if [[ $(sudo launchctl list | grep "$i") != "" ]];
+        then
+            echo "unloading "$i"..."
+            sudo launchctl unload /Library/LaunchDaemons/"$i".plist 2>&1 | grep -v "in progress"
+        else
+            :
+        fi
+    done
+    
+    
+    echo ''
+    echo "disabling other launchd services..."
+    for i in "${other_launchd_services[@]}"
+    do
+        if [[ $(sudo launchctl print-disabled system | grep "$i" | grep false) != "" ]];
+        then
+            echo "disabling "$i"..."
+            sudo launchctl disable system/"$i"
+        else
+            :
+        fi
+    done
+}
+# no longer needed as all other services are enabled independetly and check for
+# /tmp/network_select_in_progress to determine if network-select is still running
+#configure_other_launchd_services
 
 ### launchd service
 echo ''
 if [[ $(sudo launchctl list | grep "$SERVICE_NAME") != "" ]];
 then
-    sudo launchctl unload "$SERVICE_INSTALL_PATH"/"$SERVICE_NAME".plist
+    sudo launchctl unload "$SERVICE_INSTALL_PATH"/"$SERVICE_NAME".plist 2>&1 | grep -v "in progress"
     sudo launchctl disable system/"$SERVICE_NAME"
 else
     :
@@ -187,8 +150,33 @@ fi
 sudo launchctl enable system/"$SERVICE_NAME"
 sudo launchctl load "$SERVICE_INSTALL_PATH"/"$SERVICE_NAME".plist
 
-echo "waiting 10s for launchd services to load before checking installation..."
-sleep 10
+WAITING_TIME=10
+NUM1=0
+echo ''
+while [[ "$NUM1" -le "$WAITING_TIME" ]]
+do 
+	NUM1=$((NUM1+1))
+	if [[ "$NUM1" -le "$WAITING_TIME" ]]
+	then
+		#echo "$NUM1"
+		sleep 1
+		tput cuu 1 && tput el
+		echo "waiting $((WAITING_TIME-NUM1)) seconds for launchd service to load before checking installation..."
+	else
+		:
+	fi
+done
+
+echo ''
+echo "waiting for script from launchd to finish..."
+#echo ''
+sleep 3
+WAIT_PIDS=()
+WAIT_PIDS+=$(ps aux | grep /"$SCRIPT_INSTALL_NAME".sh | grep -v grep | awk '{print $2;}')
+#echo "$WAIT_PIDS"
+#if [[ "$WAIT_PIDS" == "" ]]; then :; else lsof -p "$WAIT_PIDS" +r 1 &> /dev/null; fi
+while IFS= read -r line || [[ -n "$line" ]]; do if [[ "$line" == "" ]]; then continue; fi; sudo lsof -p "$line" +r 1 &> /dev/null; done <<< "$(printf "%s\n" "${WAIT_PIDS[@]}")"
+sleep 1
 
 
 ### checking installation
@@ -200,6 +188,10 @@ wait
 #echo ''
 #echo "opening logfile..."
 #open "$LOGFILE"
+
+
+### stopping the error output redirecting
+if [[ "$RUN_FROM_BATCH_SCRIPT" == "yes" ]]; then env_stop_error_log; else :; fi
 
 
 #echo ''

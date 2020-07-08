@@ -1,0 +1,61 @@
+### macOS
+
+reboot to recovery (cmd +R)
+
+	only on macs with a t2 processor
+	- do not allow boot from usb
+	reboot
+
+open "mail" and keep open in background for indexing
+
+virus scanner
+	check if virus scan is autostarted (symbol "B" in menu bar, eventually in bartender)
+	virus scan (menu bar) - open main window - deep scan
+	if virus scanner often uses 100% CPU (for no obvious reason) follow these steps
+		1	disable firmware password if set (boot in recovery cmd + R)
+		2	boot mac in safe mode press shift during start
+		3	boot mac normally and perform deep scan
+		4	enable firmware password if wanted (boot in recovery cmd + R)
+		5	boot mac normally
+
+print filevault_key from desktop file
+
+check if email database and index are ok by importing all mails to a new eagle filer database
+
+if no icloud account is used and red dot notification is shown therefore on dock icon
+of system preferences, run script 15f_delete_dock_notifications.sh
+
+delete restore files on desktop and empty trash
+
+add card(s) to apple wallet (only possible with sip fully enabled) (ts)
+
+enable touch id (ts)
+
+clear list of old devices in icloud acccount (ws & ts)
+
+
+### iOS (ws & ts)
+
+connect iphone via usb and trust the mac
+
+iphone manual preferences
+
+phone
+	calls on other devices
+		activate needed devices
+
+messages
+	text message forwarding
+		activate needed devices
+
+
+### additional steps when changing to new hardware
+
+keychain (after batch_script1)
+	login and save passwords that are stored in "local" part of the keychain
+enable safari extensions
+office license
+imazing (license has to be deactivated on old install before it can be re-used, otherwise contact support for license-reset)
+add scan permissions in virus scanner
+macpass keys
+

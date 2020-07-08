@@ -1,34 +1,76 @@
-#!/bin/bash
+#!/bin/zsh
 
-### variables
-SCRIPT_DIR=$(echo "$(cd "${BASH_SOURCE[0]%/*}" && pwd)")
-SCRIPT_DIR_FINAL=$(echo "$(cd "${BASH_SOURCE[0]%/*}" && cd .. && pwd)")
-echo $SCRIPT_DIR_FINAL
+###
+### sourcing config file
+###
 
-
-### text output
-bold_text=$(tput bold)
-red_text=$(tput setaf 1)
-default_text=$(tput sgr0)
+if [[ -f ~/.shellscriptsrc ]]; then . ~/.shellscriptsrc; else echo '' && echo -e '\033[1;31mshell script config file not found...\033[0m\nplease install by running this command in the terminal...\n\n\033[1;34msh -c "$(curl -fsSL https://raw.githubusercontent.com/tiiiecherle/osx_install_config/master/_config_file/install_config_file.sh)"\033[0m\n' && exit 1; fi
+eval "$(typeset -f env_get_shell_specific_variables)" && env_get_shell_specific_variables
 
 
+
+###
+### run from batch script
+###
+
+
+### in addition to showing them in terminal write errors to logfile when run from batch script
+env_check_if_run_from_batch_script
+if [[ "$RUN_FROM_BATCH_SCRIPT" == "yes" ]]; then env_start_error_log; else :; fi
+
+
+
+###
+### asking password upfront
+###
+
+if [[ "$SUDOPASSWORD" == "" ]]
+then
+    if [[ -e /tmp/tmp_batch_script_fifo ]]
+    then
+        unset SUDOPASSWORD
+        SUDOPASSWORD=$(cat "/tmp/tmp_batch_script_fifo" | head -n 1)
+        USE_PASSWORD='builtin printf '"$SUDOPASSWORD\n"''
+        env_delete_tmp_batch_script_fifo
+    else
+        env_enter_sudo_password
+    fi
+else
+    :
+fi
+
+
+
+###
+### user config profile
+###
+
+SCRIPTS_DIR_USER_PROFILES="$SCRIPT_DIR_ONE_BACK"/_user_profiles
+env_check_for_user_profile
+
+
+
+###
 ### script
+###
+
 # starting with version 10.15 macos uses zsh as default login shell
 # for assuring maximum compatibility setting zsh as default on 10.14
+
 
 ### default login shell
 echo ''
 if [[ $(dscl . -read ~/ UserShell | sed 's/UserShell: //' | grep zsh) == "" ]]
 then
 	# checking if zsh is installed
-	if [[ $(command -v zsh) == "" ]]
-	then
-	    #echo ''
+	if command -v zsh &> /dev/null
+    then
+        # installed
+		echo "zsh is installed..."        
+	else
+	    # not installed
 	    echo "zsh is not installed, exiting..."
 	    exit
-	else
-		#echo ''
-		echo "zsh is installed..."
 	fi
 	
 	# checking if zsh definded as possible default shell
@@ -51,30 +93,20 @@ else
 	echo "zsh is already the default login shell..."
 fi
 
+
 ### customization
 echo ''
 echo "customizing zsh shell..."
 
 # git is part of command line tools and needed for the customization
+SCRIPT_DIR_FINAL="$SCRIPT_DIR_TWO_BACK"
 echo ''
-if xcode-select -print-path >/dev/null 2>&1 && [[ -e "$(xcode-select -print-path)" ]] && [[ -nz "$(ls -A "$(xcode-select -print-path)")" ]]
-then
-  	echo "command line tools are installed..."
-    echo ''
-else
-	echo "command line tools are not installed, installing..."
-    if [[ -e "$SCRIPT_DIR_FINAL"/03_homebrew_casks_and_mas/3b_homebrew_casks_and_mas_install/2_command_line_tools.sh ]]
-    then
-        "$SCRIPT_DIR_FINAL"/03_homebrew_casks_and_mas/3b_homebrew_casks_and_mas_install/2_command_line_tools.sh
-    else
-        echo ''
-        echo "${bold_text}${red_text}.../03_homebrew_casks_and_mas/3b_homebrew_casks_and_mas_install/2_command_line_tools.sh not found, skipping...${default_text}"
-        echo ''
-        echo "${bold_text}please install command line tools and run this script again, exiting...${default_text}"
-        echo ''
-        exit
-    fi
-fi
+trap_function_exit_middle() { env_stop_sudo; unset SUDOPASSWORD; unset USE_PASSWORD }
+"${ENV_SET_TRAP_SIG[@]}"
+"${ENV_SET_TRAP_EXIT[@]}"
+env_start_sudo
+env_command_line_tools_install_shell
+#env_stop_sudo			# done in trap
 
 # https://github.com/robbyrussell/oh-my-zsh
 # starting with a clean install
@@ -88,9 +120,12 @@ do
 	fi
 done
 
-# installing
+
+### installing/updating
+echo ''
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &
-wait
+WAIT_PID=$!
+wait "$WAIT_PID"
 
 # making sure config file exists
 if [[ ! -e ~/.zshrc ]]
@@ -102,71 +137,117 @@ else
 	:
 fi
 
-# customization (no if needed as the script always starts with a clean config)
+
+### customization (no if needed as the script always starts with a clean config)
+echo ''
+echo "customizing ~/.zshrc..."
 # changes
 sed -i '' 's|^ZSH_THEME=.*|ZSH_THEME=""|' ~/.zshrc
 sed -i '' 's|^plugins=.*|plugins=()|' ~/.zshrc
 sed -i '' '/DISABLE_AUTO_TITLE=/s/^#*//g' ~/.zshrc
 sed -i '' '/DISABLE_AUTO_TITLE=/s/^ *//g' ~/.zshrc
+sed -i '' '/DISABLE_AUTO_UPDATE=/s/^#*//g' ~/.zshrc
+sed -i '' '/DISABLE_AUTO_UPDATE=/s/^ *//g' ~/.zshrc
 # additions
+# promtp
 echo '' >> ~/.zshrc
 echo "# customized prompt" >> ~/.zshrc
 echo "PROMPT='%n%f %1~ %# '" >> ~/.zshrc
+# default editor
 echo '' >> ~/.zshrc
 echo "# default editor" >> ~/.zshrc
 echo "export EDITOR=nano" >> ~/.zshrc
+# format output of time command
+# http://zsh.sourceforge.net/Doc/Release/Parameters.html#index-TIMEFMT
+# posix
+# in hours, minutes, seconds, only printed if not zero
+#TIMEFMT=$'\nreal\t%*E\nuser\t%*U\nsys\t%*S'
+# in seconds
+#TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S'
+# default
+#TIMEFMT=$'%J %U user %S system %P cpu %*E total'
+# default without printing job name, e.g. if run for a function in a subshell
+echo '' >> ~/.zshrc
+echo "# time command output format" >> ~/.zshrc
+echo "export TIMEFMT=$'%U user %S system %P cpu %*E total'" >> ~/.zshrc
 
-# setting path if homebrew is installed
-if [[ $(command -v brew) == "" ]]
-then
-	:
-else
-	# including homebrew commands in PATH
-	add_path_to_shell() {
-	    echo "# homebrew PATH" >> "$SHELL_CONFIG"
-	    echo 'export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' >> "$SHELL_CONFIG"
-	}
-	
-	set_path_for_shell() {
-		if [[ $(command -v "$SHELL_TO_CHECK") == "" ]]
-		then
-		    #echo ''
-		    echo "$SHELL_TO_CHECK is not installed, skipping to set path..."
-		else
-		    echo "setting path for $SHELL_TO_CHECK..."
-	        if [[ ! -e "$SHELL_CONFIG" ]]
-	        then
-	            touch "$SHELL_CONFIG"
-	            chown 501:staff "$SHELL_CONFIG"
-	            chmod 600 "$SHELL_CONFIG"
-	            add_path_to_shell
-	        elif [[ $(cat "$SHELL_CONFIG" | grep "^export PATH=") != "" ]]
-	        then
-	            sed -i '' 's|^export PATH=.*|export PATH="/usr/local/bin:/usr/local/sbin:$PATH"|' "$SHELL_CONFIG"
-	        else
-	            echo '' >> "$SHELL_CONFIG"
-	            add_path_to_shell
-	        fi
-	        # sourcing changes for currently used shell
-	        if [[ $(echo "$SHELL") == "$SHELL_TO_CHECK" ]]
-	        then
-	            "$SHELL" -c "source "$SHELL_CONFIG""
-	        else
-	            :
-	        fi
-		fi
-	}
-	
-	SHELL_TO_CHECK="/bin/bash"
-	SHELL_CONFIG="/Users/$(logname)/.bashrc"
-	set_path_for_shell
-	
-	SHELL_TO_CHECK="/bin/zsh"
-	SHELL_CONFIG="/Users/$(logname)/.zshrc"
-	set_path_for_shell
-fi
 
-# sourcing config file if script is run from zsh for changes to take effect
+### path
+# documentation
+# three different locations/ways to set PATH
+#
+# 1		/etc/paths
+# 		used by all shells, all users and gui applications
+#
+# 2		shell config file like ~/.zshrc or ~/.bashrc
+#		used by all user shells and user launchd scripts 
+#		not used by launchd scripts that are run as system/root (source the shell config file of the loggedInUser to make it work)
+#		does only work for shells, not for gui applications
+#		works to manage the correct order of PATH, even in front of entries from /etc/paths if required
+#		example entry
+#		export PATH="/usr/local/bin:$PATH"
+#		
+# 3		sudo launchctl config user/system path
+#		user path		used by all user shells, launchdscripts and user gui apps
+#		system path		used by all root/system shells, launchdscripts and gui apps
+#		does not work for putting entries in order before entries from /etc/paths
+#		if this is used solely entries from /etc/paths would have to be commented out to achive the given order		
+#		examples	
+# 		all system users except root
+# 		sudo launchctl config user path "/usr/local/bin:/usr/local/sbin:/usr/local/opt/openssl@1.1/bin:$PATH"
+# 		system/root
+# 		sudo launchctl config system path "/usr/local/bin:/usr/local/sbin:/usr/local/opt/openssl@1.1/bin:$PATH"
+# 		unset
+# 		sudo launchctl config user path ''
+# 		sudo launchctl config system path ''
+#
+# working solutions
+# 1		set default entries in /etc/paths
+#		set customized PATH in shell config for shell commands
+#		set/unset PATH for gui apps via launchctl config - needs reboot (will be added in order after entries from /etc/paths)
+#
+# 2		comment out all entries in /etc/paths
+#		comment out all export PATH entries in shell config files
+#		set user/system path via launchctl for shell commands and gui apps - needs reboot
+#
+# testing
+# echo "$PATH"
+
+# setting path
+echo ''
+echo "setting PATH..."
+
+# default value of variable is set in .shellscriptsrc, can be overwritten here, e.g.
+# PATH_TO_SET='/usr/local/bin:$PATH'
+
+# setting default paths in /etc/paths
+#env_start_sudo			# already started above
+#env_set_default_paths
+#env_stop_sudo			# done in trap
+
+# setting paths for bash
+SHELL_TO_CHECK="/bin/bash"
+SHELL_CONFIG="/Users/$(logname)/.bashrc"
+env_set_path_for_shell
+
+# setting paths for zsh
+SHELL_TO_CHECK="/bin/zsh"
+SHELL_CONFIG="/Users/$(logname)/.zshrc"
+env_set_path_for_shell
+
+# setting/unsetting path via launchctl
+#env_start_sudo			# already started above
+sudo launchctl config user path ''
+sudo launchctl config system path ''
+#env_stop_sudo			# done in trap
+
+
+### avoiding [oh-my-zsh] Insecure completion-dependent directories detected
+sudo chmod 755 /usr/local/share/zsh
+sudo chmod 755 /usr/local/share/zsh/site-functions
+
+	
+### sourcing config file if script is run from zsh for changes to take effect
 # will be sourced when opening a new terminal session automatically
 if [[ $(echo "$SHELL") == "/bin/zsh" ]]
 then
@@ -175,11 +256,12 @@ else
     :
 fi
 
-# starting zsh shell in current terminal
-echo ''
-echo "switching to zsh shell..."
-echo ''
-exec zsh -l
+
+### starting zsh shell in current terminal
+#echo ''
+#echo "switching to zsh shell..."
+#echo ''
+#exec zsh -l
 
 ### documentation
 # currently used shell
@@ -198,3 +280,10 @@ exec zsh -l
 # source ~/.zshrc
 # sudo "$SHELL" -c "echo $(which zsh) >> /etc/shells"
 # chsh -s $(which zsh) $USER
+
+### stopping the error output redirecting
+if [[ "$RUN_FROM_BATCH_SCRIPT" == "yes" ]]; then env_stop_error_log; else :; fi
+
+echo ''
+echo "done ;)"
+echo ''
